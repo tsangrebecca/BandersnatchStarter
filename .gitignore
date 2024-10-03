@@ -103,6 +103,7 @@ celerybeat.pid
 *.sage.py
 .env
 .venv
+secret.py
 env/
 venv/
 ENV/
