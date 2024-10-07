@@ -1,3 +1,6 @@
+''' when running this file to open webpage, make sure cd to bandersnatchstarter
+and type $ py -m app.main to rerun the file with all the packages and imports'''
+
 from base64 import b64decode
 import os
 

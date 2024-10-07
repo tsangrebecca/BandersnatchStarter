@@ -88,3 +88,5 @@ if __name__ == '__main__':
     # Reset the collection aka delete all docs
     #db.reset()
     print("Collection has been reset. All monsters are deleted.")
+
+# Use Git Bash to push code to Github instead of the VSCode terminal
