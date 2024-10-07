@@ -13,7 +13,7 @@ from app.data import Database
 from app.graph import chart
 from app.machine import Machine
 
-SPRINT = 1
+SPRINT = 2
 APP = Flask(__name__)
 
 
@@ -29,6 +29,7 @@ def home():
 
 @APP.route("/data")
 def data():
+    # Just return the empty .html webpage with no data
     if SPRINT < 1:
         return render_template("data.html")
     db = Database()
@@ -43,17 +44,33 @@ def data():
 def view():
     if SPRINT < 2:
         return render_template("view.html")
+    
     db = Database()
     options = ["Level", "Health", "Energy", "Sanity", "Rarity"]
     x_axis = request.values.get("x_axis") or options[1]
     y_axis = request.values.get("y_axis") or options[2]
     target = request.values.get("target") or options[4]
+
+    # Fetch the dataframe
+    df = db.dataframe()
+
+    # Convert the _id (ObjectId) to string because
+    #   MongoDB's _id field is stored as an ObjectID, not directly
+    #   serializable to JSON, but Altair is trying to convert the df to JSON
+    #   Hence we have to convert ObjectID to a string in my df before passing
+    #   it to the Altair chart
+    if '_id' in df.columns:
+        df['_id'] = df['_id'].astype(str)
+
+    # Generate the chart, Altair uses JSON    
     graph = chart(
-        df=db.dataframe(),
+        # df=db.dataframe(),
+        df=df,
         x=x_axis,
         y=y_axis,
         target=target,
     ).to_json()
+
     return render_template(
         "view.html",
         options=options,
