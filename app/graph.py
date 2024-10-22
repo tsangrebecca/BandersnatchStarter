@@ -1,4 +1,4 @@
-# importing two classes from the Altair visualization library
+# importing 2 classes from the Altair visualization library
 #   Chart to create and config visualization
 #   Tooltip for pop-up text boxes when hover over data points
 from altair import Chart, Tooltip
