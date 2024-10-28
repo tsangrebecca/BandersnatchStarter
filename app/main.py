@@ -81,7 +81,6 @@ def view():
         graph=graph,
     )
 
-
 @APP.route("/model", methods=["GET", "POST"])
 def model():
     if SPRINT < 3:
