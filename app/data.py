@@ -1,3 +1,6 @@
+# Run this file in terminal to generate monsters_data.html in the same working directory
+# if not already exists
+
 from os import getenv
 from certifi import where
 from dotenv import load_dotenv
@@ -64,6 +67,7 @@ class Database:
         df = self.dataframe() # referring to the method within the class, so we need .self
         return df.to_html()
 
+
 '''The following code block will run when script is executed as standalone program, 
 a way to showcase the functionality of the Database class.'''
 if __name__ == '__main__':
@@ -88,5 +92,11 @@ if __name__ == '__main__':
     # Reset the collection aka delete all docs
     #db.reset()
     print("Collection has been reset. All monsters are deleted.")
+
+    # Generate, write and save the HTML table representation to working directory
+    html_output = db.html_table()
+    with open("monsters_data.html", "w") as f:
+        f.write(html_output)
+    print("HTML table saved to monsters_data.html.")
 
 # Use Git Bash to push code to Github instead of the VSCode terminal

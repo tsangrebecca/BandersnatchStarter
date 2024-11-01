@@ -1,26 +1,27 @@
 import os
 import joblib  # save and load Python projects, storing models
 from pandas import DataFrame
-from sklearn.model_selection import train_test_split, GridSearchCV
 from sklearn.ensemble import RandomForestClassifier
-from sklearn.linear_model import LogisticRegression
-from sklearn.svm import SVC
-from sklearn.metrics import accuracy_score
 from datetime import datetime
 
+# Define a class Machine to encapsulate model training, prediction,
+#   saving, loading and info about the model
 class Machine:
-
+    # Constructor method to initialize the Machine object with a dataset (df)
     def __init__(self, df: DataFrame):
         # Initialize features and target data
         self.name = "Random Forest Classifier"
         target = df["Rarity"]
         features = df.drop(columns=["Rarity"])
 
-        # Define model
-        self.model = RandomForestClassifier()
+        # Define model and best params
+        self.model = RandomForestClassifier(max_depth=30, max_features='sqrt', min_samples_leaf=1, min_samples_split=2, 
+                                            n_estimators=200, random_state=42, n_jobs=-1)
         self.model.fit(features, target)
-        self.initialized_at = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        self.timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
+    # This method is used to make the class instance behave like a callable function
+    # Instead of machine.predict(feature_basis), we can directly use machine(feature_basis)
     def __call__(self, feature_basis: DataFrame):
         # Use the best model to make a prediction
         prediction = self.model.predict(feature_basis)
@@ -34,27 +35,26 @@ class Machine:
         return prediction[0], probability
 
     def save(self, filepath):
-        """ Save the best model to a file using joblib """
-        # joblib.dump(self.model, 'model.joblib') # 'model.joblib'
-        # print(f"Model saved to {filepath}")
         with open(filepath, 'wb') as f:
-            joblib.dump((self.model, self.name, self.initialized_at), f)
+            # Saves data to the file object f
+            joblib.dump((self.model, self.name, self.timestamp), f)
 
-    @staticmethod
+    # Decorator to indicate that open is a static method, that it can be
+    #   called directly on the class Machine (e.g. Machine.open(filepath)) w/o
+    #   requiring an instance of Machine
+    @staticmethod 
     def open(filepath):
-        """ Load a saved model from a file using joblib """
-        with open(filepath, 'rb') as file:  # opens file in binary read mode
-            data = joblib.load(file)
+        with open(filepath, 'rb') as f:
+            model, name, timestamp = joblib.load(f) # unpack data into 3 variables
 
-        # __new__ is a method for creating a new instance of a class quickly
-        machine = Machine.__new__(Machine) 
-        # assign previously saved model to attributes of the new machine instance
-        machine.model = data['model'] 
-        machine.name = data['model_name']
-        machine.initialized_at = data['initialized_at']
-        return machine
-        # return joblib.load('model.joblib')
+        # create a new instance without calling __init__ to prevent re-running any setup code in __init__
+        instance = Machine.__new__(Machine) 
+        # Assign loaded values to the instance attributes
+        instance.model = model
+        instance.name = name
+        instance.timestamp = timestamp
+        return instance # newly created Machine instance
 
     def info(self):
         """ Return info about the best model and the timestamp when it was initialized """
-        return f"Best Model: {self.name}, Initialized at: {self.initialized_at}"
+        return f"Best Model: {self.name}, Initialized at: {self.timestamp}"
