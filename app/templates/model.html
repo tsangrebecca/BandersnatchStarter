@@ -1,9 +1,12 @@
 {% extends "layout.html" %}
 {% block content %}
-    <h1>Bandersnatch Model</h1>
+    <h2>Monster Model</h2>
     <p>{{ info | safe }}</p>
+    <p>The best model is determined by extensive exploratory data analysis (EDA), model building, fitting, and
+        hyperparameter tuning in Google Colab notebook.</p>
 
     <h2>Prediction Basis</h2>
+    <p>Random numbers are already pre-entered for you to start. You can change them as you wish for a new prediction.</p>
     <form id="form" method="post" action="{{ url_for('model') }}">
         <p><label>
             Level: <input name="level" value="{{ level }}"/>
