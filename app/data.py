@@ -19,12 +19,15 @@ class Database:
     def __init__(self) -> None:
         # Fetch the MongoDB connection URL from environment variables in .env file
         self.mongo_url = getenv('MONGO_URL')
-        print(f"MongoURL {self.mongo_url}")
+        self.host = getenv('HOST')
+        self.port = getenv('PORT')
+        print(f"HOST *** {self.host}")
+        print(f"PORT *** {self.port}")
 
         # Set up MongoDB client to connect to a MongoDB database, takes the URL and establish secure connection
         #   with a certificate authority (CA) file
-        self.client = MongoClient(self.mongo_url, tlsCAFile=where())
-        print(f"Client {self.client}")
+        self.client = MongoClient(self.host, self.port)
+        print(f"Client **** {self.client}")
         # specify a particular database we want to work with
         self.db = self.client['monster_db']
 
