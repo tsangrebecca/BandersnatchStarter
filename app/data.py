@@ -23,7 +23,7 @@ class Database:
         # Set up MongoDB client to connect to a MongoDB database, takes the URL and establish secure connection
         #   with a certificate authority (CA) file
         self.client = MongoClient(self.mongo_url, tlsCAFile=where())
-
+        print(f"Client {self.client}")
         # specify a particular database we want to work with
         self.db = self.client['monster_db']
 
