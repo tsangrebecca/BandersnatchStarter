@@ -13,12 +13,13 @@ from pymongo import MongoClient
 #   do a one-time autogenerate pswd). Click Connect, and copy & paste connection string
 #   with username and password onto .env
 load_dotenv()
-
+print("trying to connect to db")
 class Database:
     # write the constructor for the new object, initialize the class's attributes
     def __init__(self) -> None:
         # Fetch the MongoDB connection URL from environment variables in .env file
         self.mongo_url = getenv('MONGO_URL')
+        print(f"MongoURL {self.mongo_url}")
 
         # Set up MongoDB client to connect to a MongoDB database, takes the URL and establish secure connection
         #   with a certificate authority (CA) file
@@ -29,6 +30,7 @@ class Database:
 
         # and a specific collection
         self.collection = self.db['monsters']
+        print(f"Collection {self.collection}")
 
     def seed(self, amount):
         '''Generate and insert 'amount' number of monsters into the collection.'''

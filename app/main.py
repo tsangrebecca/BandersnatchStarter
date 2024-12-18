@@ -33,7 +33,9 @@ def data():
     # Just return the empty .html webpage with no data
     if SPRINT < 1:
         return render_template("data.html")
+    print("trying to connect db now")
     db = Database()
+    print(f"db ${db}")
     return render_template(
         "data.html",
         count=db.count(),
