@@ -10,13 +10,32 @@ from MonsterLab import Monster
 from flask import Flask, render_template, request
 from pandas import DataFrame
 
+from dotenv import load_dotenv # loading environment variables
+
 from app.data import Database
 from app.graph import chart
 from app.machine import Machine
 
+
+
+# Load environment variables from .env file
+load_dotenv()
+
 SPRINT = 3
 APP = Flask(__name__)
 
+# configure the app
+APP.config['DEBUG'] = os.getenv('FLASK_DEBUG', 'false').lower() == 'true'
+APP.config['MONGO_URL'] = os.getenv('MONGO_URL')
+
+# MongoDB connection string from .env
+MONGO_URL = os.getenv("MONGO_URL")
+
+if not MONGO_URL:
+    raise ValueError("MONGO_URL is not set in your environment variables.")
+
+# Pass the connection string to the Database class
+# db = Database(MONGO_URL)
 
 @APP.route("/")
 def home():
@@ -118,5 +137,6 @@ def model():
     )
 
 
-if __name__ == '__main__':
-    APP.run()
+# if __name__ == '__main__':
+#     # Use a production-ready WSGI server like Gunicorn or uWSGI in production
+#     APP.run(host="0.0.0.0", port=5000)
